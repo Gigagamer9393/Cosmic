@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cosmic Launcher Download</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: #0b0b14;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #a855f7;
+        border-radius: 50%;
+        opacity: 0.8;
+        animation: drift 10s linear infinite;
+    }
+
+    @keyframes drift {
+        0% { transform: translateY(0) translateX(0) scale(1); opacity:0.8; }
+        50% { transform: translateY(-200px) translateX(50px) scale(1.5); opacity:0.5; }
+        100% { transform: translateY(-400px) translateX(0) scale(1); opacity:0; }
+    }
+
+    .bg-glow {
+        position: absolute;
+        width: 250%;
+        height: 250%;
+        background: radial-gradient(circle at 50% 50%, #a855f7, #0b0b14 70%);
+        animation: rotate 25s linear infinite;
+        z-index: -2;
+    }
+
+    @keyframes rotate {
+        0% {transform: rotate(0deg);}
+        100% {transform: rotate(360deg);}
+    }
+
+    .neon-line {
+        position: absolute;
+        width: 2px;
+        height: 150%;
+        background: linear-gradient(#a855f7, transparent);
+        animation: moveLine 5s linear infinite;
+        opacity: 0.5;
+    }
+
+    @keyframes moveLine {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(100vw); }
+    }
+
+    h1 {
+        font-size: 4rem;
+        color: #a855f7;
+        text-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7, 0 0 40px #a855f7;
+        margin-bottom: 20px;
+        text-align: center;
+        z-index: 1;
+    }
+
+    p {
+        font-size: 1.2rem;
+        color: #b3b3c7;
+        text-align: center;
+        margin-bottom: 50px;
+        z-index: 1;
+    }
+
+    .download-btn {
+        background: #16162b;
+        color: #ffffff;
+        border: 2px solid #a855f7;
+        padding: 20px 60px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 15px;
+        text-decoration: none;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7, 0 0 30px #a855f7;
+        transition: all 0.3s ease;
+        animation: pulse 2s infinite;
+        overflow: hidden;
+    }
+
+    @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7, 0 0 30px #a855f7; }
+        50% { box-shadow: 0 0 20px #a855f7, 0 0 40px #a855f7, 0 0 60px #a855f7; }
+    }
+
+    .download-btn:hover {
+        color: #000000;
+        background: #a855f7;
+        box-shadow: 0 0 20px #a855f7, 0 0 40px #a855f7, 0 0 60px #a855f7;
+        transform: scale(1.05);
+    }
+
+    /* Neon-Blitze Effekt */
+    .download-btn::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(from 0deg, transparent 0deg, #ffffff 10deg, transparent 20deg);
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 0;
+        pointer-events: none;
+        animation: rotate-blitz 2s linear infinite;
+    }
+
+    .download-btn:hover::before {
+        opacity: 0.3;
+    }
+
+    @keyframes rotate-blitz {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<div class="neon-line" style="left: 10%; animation-duration:6s;"></div>
+<div class="neon-line" style="left: 30%; animation-duration:8s;"></div>
+<div class="neon-line" style="left: 60%; animation-duration:10s;"></div>
+<div class="neon-line" style="left: 80%; animation-duration:7s;"></div>
+
+<h1>Cosmic Launcher</h1>
+<p>Hol dir jetzt den Cosmic Launcher. 24/7 Visual Support inklusive.</p>
+
+<a href="https://example.com/launcher.exe" download class="download-btn">Download Launcher</a>
+
+<script>
+    for(let i=0;i<50;i++){
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        particle.style.left = Math.random()*100 + 'vw';
+        particle.style.top = Math.random()*100 + 'vh';
+        particle.style.animationDelay = Math.random()*5 + 's';
+        particle.style.width = particle.style.height = Math.random()*4+2 + 'px';
+        document.body.appendChild(particle);
+    }
+</script>
+
+</body>
+</html>
