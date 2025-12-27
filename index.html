@@ -142,25 +142,6 @@ p {
     transform: scale(1.07);
 }
 
-.download-btn::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    background: radial-gradient(circle, #ffffff 0%, transparent 80%);
-    opacity: 0;
-    border-radius: 15px;
-    animation: spark 3s infinite;
-}
-
-@keyframes spark {
-    0%,80%,100% { opacity:0; transform: translate(0,0) scale(0.5); }
-    85% { opacity:0.8; transform: translate(10%, -20%) scale(1); }
-    90% { opacity:0.6; transform: translate(-15%, 15%) scale(0.8); }
-    95% { opacity:0.8; transform: translate(5%, -10%) scale(1); }
-}
-
 /* Ladebalken */
 .loading-bar-container {
     position: absolute;
@@ -202,13 +183,6 @@ p {
     transition: opacity 1.5s ease, transform 0.2s ease;
     z-index: 10;
     width: 300px;
-    animation: glowPulse 3s ease-in-out infinite alternate;
-}
-
-@keyframes glowPulse {
-    0% { box-shadow:0 0 10px #a855f7,0 0 20px #ff75f0,0 0 30px #00ffff; border-color:#a855f7; }
-    50% { box-shadow:0 0 20px #a855f7,0 0 40px #ff75f0,0 0 60px #00ffff; border-color:#ff75f0; }
-    100% { box-shadow:0 0 15px #a855f7,0 0 30px #ff75f0,0 0 45px #00ffff; border-color:#00ffff; }
 }
 
 /* Uhr */
@@ -227,20 +201,52 @@ p {
     transition: opacity 1s ease, transform 0.2s ease, box-shadow 0.3s ease;
     z-index: 20;
     cursor: default;
-    animation: pulseClock 3s ease-in-out infinite alternate;
 }
 
-@keyframes pulseClock {
-    0% { box-shadow: 0 0 10px #00ffff, 0 0 20px #ff75f0, 0 0 30px #a855f7; }
-    50% { box-shadow: 0 0 20px #00ffff, 0 0 40px #ff75f0, 0 0 60px #a855f7; }
-    100% { box-shadow: 0 0 15px #00ffff, 0 0 30px #ff75f0, 0 0 45px #a855f7; }
+/* Powered By */
+.powered {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.65);
+    padding: 10px 16px;
+    border-radius: 14px;
+    border: 1px solid #a855f7;
+    font-family: 'Courier New', Courier, monospace;
+    color: #a855f7;
+    box-shadow: 0 0 20px #a855f7;
+    opacity: 0;
+    transition: opacity 1s;
+    z-index: 50;
+}
+.powered span { color:#00ffff; }
+
+/* Mouse Bubbles */
+.mouse-bubble {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.8;
+    background: radial-gradient(circle, #a855f7, #ff75f0, transparent 70%);
+    box-shadow: 0 0 12px #ff75f0,0 0 30px #a855f7;
+    animation: swirl 2s ease-out forwards;
+    z-index: 9999;
+}
+@keyframes swirl {
+    0% { transform: rotate(0deg) scale(0.5); }
+    100% { transform: rotate(720deg) translateX(80px) scale(1.5); opacity: 0; }
+}
+.bubble-pop {
+    animation: pop 0.4s forwards !important;
+}
+@keyframes pop {
+    100% { transform: scale(3); opacity:0; box-shadow:0 0 50px #a855f7,0 0 80px #ff75f0; }
 }
 </style>
 </head>
 <body>
 
 <div class="bg-glow"></div>
-
 <div class="neon-line" style="left: 10%;"></div>
 <div class="neon-line" style="left: 30%;"></div>
 <div class="neon-line" style="left: 60%;"></div>
@@ -251,22 +257,20 @@ p {
 
 <a href="https://os5.mycloud.com/action/share/3f44fbf3-feeb-459d-8af6-c42fdf8ac710" download class="download-btn">Download Launcher</a>
 
-<!-- Ladebalken -->
 <div class="loading-bar-container" id="loading-bar-container">
     <div class="loading-bar" id="loading-bar"></div>
 </div>
 
-<!-- Pop-up -->
 <div class="popup" id="popup">
   <p id="popup-text"></p>
   <p id="popup-version">Version 1.00</p>
 </div>
 
-<!-- Uhr links oben -->
 <div class="clock" id="clock"></div>
+<div class="powered" id="powered"><span id="powered-text"></span></div>
 
 <script>
-// Sterne generieren
+// Sterne
 for(let i=0;i<70;i++){
     const particle=document.createElement('div');
     particle.classList.add('particle');
@@ -284,84 +288,66 @@ window.addEventListener('load', () => {
     const textEl=document.getElementById('popup-text');
     const text="Download the latest version of Cosmic Launcher";
     let i=0;
-
-    setTimeout(()=>{
-        popup.style.opacity=1;
-        popup.style.transform='translateY(0)';
-    },500);
-
+    setTimeout(()=>{popup.style.opacity=1; popup.style.transform='translateY(0)';},500);
     function typeWriter(){
         if(i<text.length){
-            textEl.textContent+=text.charAt(i);
-            i++;
+            textEl.textContent+=text.charAt(i++);
             const delay=50+Math.random()*70;
             popup.style.boxShadow=`0 0 ${10+Math.random()*15}px #a855f7,0 0 ${20+Math.random()*20}px #ff75f0,0 0 ${30+Math.random()*30}px #00ffff`;
             setTimeout(typeWriter,delay);
-        } else {
-            setTimeout(()=>{
-                popup.style.opacity=0;
-                popup.style.transform='translateY(-20px)';
-            },4000);
-        }
+        } else {setTimeout(()=>{popup.style.opacity=0; popup.style.transform='translateY(-20px)';},4000);}
     }
     typeWriter();
 
-    // Ladebalken Animation bei Button-Klick
-    const downloadBtn = document.querySelector('.download-btn');
-    const loadingBarContainer = document.getElementById('loading-bar-container');
-    const loadingBar = document.getElementById('loading-bar');
-
-    downloadBtn.addEventListener('click', () => {
-        loadingBarContainer.style.opacity = 1;
-        loadingBar.style.width = '100%';  // Ladebalken füllt sich
-    });
+    // Ladebalken
+    const downloadBtn=document.querySelector('.download-btn');
+    const loadingBarContainer=document.getElementById('loading-bar-container');
+    const loadingBar=document.getElementById('loading-bar');
+    downloadBtn.addEventListener('click',()=>{loadingBarContainer.style.opacity=1; loadingBar.style.width='100%';});
 
     // Uhr
     const clock=document.getElementById('clock');
-    function updateClock() {
+    function updateClock(){
         const now=new Date();
-        const hours=String(now.getHours()).padStart(2,'0');
-        const minutes=String(now.getMinutes()).padStart(2,'0');
-        const seconds=String(now.getSeconds()).padStart(2,'0');
-        const day=String(now.getDate()).padStart(2,'0');
-        const month=String(now.getMonth()+1).padStart(2,'0');
-        const year=now.getFullYear();
-        clock.textContent=`${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
+        clock.textContent=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')} - ${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
+        clock.style.opacity=1;
     }
-
     setInterval(updateClock,1000);
 
-    function toggleClock() {
-        clock.style.opacity=0;
-        const randomDelay=1000+Math.random()*4000;
-        setTimeout(()=>{
-            updateClock();
-            clock.style.opacity=1;
-        },randomDelay);
-    }
+    // Powered by
+    const powered=document.getElementById('powered');
+    const poweredText=document.getElementById('powered-text');
+    const poweredString="Powered by GigarazorLp";
+    function typePowered(){poweredText.textContent=""; let j=0; (function t(){if(j<poweredString.length){poweredText.textContent+=poweredString[j++]; setTimeout(t,70);}})();}
+    setTimeout(()=>{powered.style.opacity=1; typePowered();},1500);
+    setInterval(()=>{powered.style.opacity=0; setTimeout(()=>{powered.style.opacity=1; typePowered();},1000)},10000);
 
-    setTimeout(()=>{ clock.style.opacity=1; },500);
-    setInterval(toggleClock,10000);
-
-    // Maus-Parallax Uhr
-    document.addEventListener('mousemove',(e)=>{
-        const mouseX=e.clientX;
-        const mouseY=e.clientY;
-        const winWidth=window.innerWidth;
-        const winHeight=window.innerHeight;
-        const offsetX=((mouseX/winWidth)-0.5)*10;
-        const offsetY=((mouseY/winHeight)-0.5)*10;
-        clock.style.transform=`translateX(${offsetX}px) translateY(${offsetY}px)`;
+    // Mouse bubbles
+    let bubbles=[],lx=0,ly=0,a=0;
+    document.addEventListener("mousemove",e=>{
+        let dx=e.clientX-lx, dy=e.clientY-ly;
+        let sp=Math.sqrt(dx*dx+dy*dy);
+        lx=e.clientX; ly=e.clientY;
+        if(Math.random()<sp/30){
+            let b=document.createElement("div");
+            b.className="mouse-bubble";
+            let colors=[["#a855f7","#ff75f0"],["#ff75f0","#00ffff"],["#a855f7","#00ffff"]];
+            let[c1,c2]=colors[Math.floor(Math.random()*colors.length)];
+            b.style.setProperty("--c1",c1); b.style.setProperty("--c2",c2);
+            b.style.width=b.style.height=Math.min(20,6+sp*0.2)+"px";
+            a+=30; b.style.left=e.clientX+Math.cos(a)*20+"px";
+            b.style.top=e.clientY+Math.sin(a)*20+"px";
+            document.body.appendChild(b);
+            bubbles.push(b);
+            setTimeout(()=>b.remove(),2000);
+        }
     });
 
-    clock.addEventListener('mouseenter',()=>{
-        clock.style.boxShadow='0 0 30px #00ffff, 0 0 60px #ff75f0, 0 0 90px #a855f7';
-    });
-    clock.addEventListener('mouseleave',()=>{
-        clock.style.boxShadow='0 0 10px #00ffff, 0 0 20px #ff75f0, 0 0 30px #a855f7';
+    document.addEventListener("click",()=>{
+        bubbles.forEach(b=>{b.classList.add("bubble-pop"); setTimeout(()=>b.remove(),400);});
+        bubbles=[];
     });
 });
 </script>
-
 </body>
 </html>
